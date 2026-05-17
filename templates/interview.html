@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block title %}Interview — InterviewAI{% endblock %}
+
+{% block content %}
+<div class="interview-layout">
+
+  <!-- Back nav -->
+  <div class="interview-topbar">
+    <a href="{{ url_for('dashboard') }}" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"><polyline points="15 18 9 12 15 6"/></svg>
+      Dashboard
+    </a>
+    <div class="timer-display" id="timerDisplay">00:00</div>
+  </div>
+
+  <!-- ── Setup Panel (shown before interview starts) ───── -->
+  <div id="setupPanel" class="interview-setup">
+    <div class="setup-card">
+      <h1 class="setup-title">Configure Your Interview</h1>
+      <p class="setup-sub">Personalise your session and let AI generate your questions</p>
+
+      {% if resume %}
+        <div class="resume-banner">
+          <span>📄</span>
+          <span>Resume detected — questions will be tailored to your skills</span>
+        </div>
+      {% endif %}
+
+      <div class="setup-grid">
+        <div class="form-group">
+          <label>Job Role</label>
+          <select id="jobRole" class="form-select">
+            <option value="Software Engineer">💻 Software Engineer</option>
+            <option value="Data Scientist">📊 Data Scientist</option>
+            <option value="Product Manager">📱 Product Manager</option>
+            <option value="General">🌐 General / Behavioural</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Difficulty</label>
+          <select id="difficulty" class="form-select">
+            <option value="easy">🟢 Easy</option>
+            <option value="medium" selected>🟡 Medium</option>
+            <option value="hard">🔴 Hard</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Number of Questions</label>
+          <select id="questionCount" class="form-select">
+            <option value="3">3 questions (~10 min)</option>
+            <option value="5" selected>5 questions (~20 min)</option>
+            <option value="7">7 questions (~30 min)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Webcam Preview -->
+      <div class="webcam-section">
+        <div class="webcam-container" id="webcamContainer">
+          <video id="webcamPreview" autoplay muted playsinline></video>
+          <div class="webcam-overlay">
+            <div class="emotion-live" id="emotionLive">
+              <span class="emotion-dot"></span>
+              <span id="emotionText">Detecting…</span>
+            </div>
+          </div>
+          <div class="webcam-off" id="webcamOff">
+            <div class="webcam-off-icon">📷</div>
+            <p>Camera is off</p>
+            <button class="btn-ghost" onclick="startWebcam()">Enable Camera</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary btn-full btn-large" onclick="startInterview()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        Begin Interview
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Active Interview Panel ────────────────────────── -->
+  <div id="activePanel" class="interview-active hidden">
+    <div class="interview-content">
+
+      <!-- Left: Question + Answer -->
+      <div class="question-section">
+
+        <!-- Progress -->
+        <div class="progress-row">
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <span class="progress-label" id="progressLabel">Q1 / 5</span>
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-card" id="questionCard">
+          <div class="question-num" id="questionNum">Question 1</div>
+          <div class="question-text" id="questionText">Loading question…</div>
+          <div class="question-hint">💡 Tip: Use the STAR method — Situation, Task, Action, Result</div>
+        </div>
+
+        <!-- Answer Controls -->
+        <div class="answer-section">
+          <div class="answer-header">
+            <span class="answer-label">Your Answer</span>
+            <div class="recording-indicator hidden" id="recordingIndicator">
+              <span class="rec-dot"></span> Recording…
+            </div>
+          </div>
+
+          <textarea
+            id="answerText"
+            class="answer-textarea"
+            placeholder="Your transcribed answer will appear here. You can also type your answer directly…"
+            rows="6"
+          ></textarea>
+
+          <div class="answer-actions">
+            <button class="btn-mic" id="micBtn" onclick="toggleMic()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20">
+                <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                <path d="M19 10v2a7 7 0 01-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+              <span id="micBtnText">Start Speaking</span>
+            </button>
+
+            <button class="btn-primary" onclick="submitAnswer()">
+              Next Question
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Score Feedback -->
+        <div class="live-feedback hidden" id="liveFeedback">
+          <div class="feedback-score" id="feedbackScore"></div>
+          <div class="feedback-text"  id="feedbackText"></div>
+        </div>
+
+      </div>
+
+      <!-- Right: Webcam + Metrics -->
+      <div class="metrics-section">
+
+        <div class="webcam-mini" id="webcamMini">
+          <video id="webcamActive" autoplay muted playsinline></video>
+          <div class="emotion-badge" id="emotionBadge">😐 Neutral</div>
+        </div>
+
+        <div class="metric-cards">
+          <div class="metric-card">
+            <div class="metric-label">Confidence</div>
+            <div class="metric-value" id="metricConfidence">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Emotion</div>
+            <div class="metric-value" id="metricEmotion">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Last Score</div>
+            <div class="metric-value" id="metricScore">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Questions Done</div>
+            <div class="metric-value" id="metricDone">0</div>
+          </div>
+        </div>
+
+        <button class="btn-danger" onclick="endInterview()">End Interview</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Finishing Overlay ──────────────────────────────── -->
+  <div id="finishOverlay" class="finish-overlay hidden">
+    <div class="finish-spinner">
+      <div class="spinner"></div>
+      <p>Analysing your performance…</p>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/interview.js') }}"></script>
+{% endblock %}

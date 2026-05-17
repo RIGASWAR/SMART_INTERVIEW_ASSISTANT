@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Results — InterviewAI{% endblock %}
+
+{% block content %}
+<div class="results-layout">
+
+  <!-- Back nav -->
+  <div class="interview-topbar">
+    <a href="{{ url_for('dashboard') }}" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Dashboard
+    </a>
+    <a href="{{ url_for('interview') }}" class="btn-primary">
+      Practice Again
+    </a>
+  </div>
+
+  <!-- Score Hero -->
+  <div class="score-hero">
+    <div class="score-ring-wrapper">
+      <svg class="score-ring" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="14"/>
+        <circle cx="100" cy="100" r="85" fill="none"
+          stroke="url(#ringGrad)" stroke-width="14"
+          stroke-linecap="round"
+          stroke-dasharray="{{ (interview.score / 100 * 534) | round(1) }} 534"
+          transform="rotate(-90 100 100)"
+        />
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#7c3aed"/>
+            <stop offset="100%" stop-color="#06b6d4"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="score-ring-inner">
+        <div class="score-big">{{ interview.score }}</div>
+        <div class="score-pct">/ 100</div>
+        <div class="score-grade grade-{{ interview.score | int // 10 }}">
+          {% if interview.score >= 85 %}A{% elif interview.score >= 75 %}B{% elif interview.score >= 65 %}C{% elif interview.score >= 50 %}D{% else %}F{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-details">
+      <h1 class="hero-title">Interview Complete!</h1>
+      <p class="hero-sub">{{ interview.job_role }} · {{ interview.difficulty | capitalize }} · {{ interview.total_questions }} Questions</p>
+      <p class="hero-date">{{ interview.created_at[:16] }}</p>
+
+      <div class="hero-metrics">
+        <div class="hm">
+          <div class="hm-val">{{ interview.confidence_avg }}%</div>
+          <div class="hm-label">Avg Confidence</div>
+        </div>
+        <div class="hm">
+          <div class="hm-val">{{ interview.emotion_score }}%</div>
+          <div class="hm-label">Positive Emotion</div>
+        </div>
+        <div class="hm">
+          {% set mins = (interview.duration_sec // 60) %}
+          {% set secs = (interview.duration_sec % 60) %}
+          <div class="hm-val">{{ "%d:%02d" | format(mins, secs) }}</div>
+          <div class="hm-label">Duration</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Per-Question Breakdown -->
+  <div class="breakdown-section">
+    <h2 class="section-title">Answer Breakdown</h2>
+
+    {% for ans in answers %}
+    <div class="answer-card">
+      <div class="answer-card-header">
+        <div class="answer-card-meta">
+          <span class="qnum">Q{{ loop.index }}</span>
+          <span class="emotion-tag">{{ ans.emotion | capitalize }}</span>
+          <span class="conf-tag">{{ ans.confidence }}% confident</span>
+        </div>
+        <div class="answer-score-badge {% if ans.score >= 75 %}good{% elif ans.score >= 50 %}avg{% else %}low{% endif %}">
+          {{ ans.score }}%
+        </div>
+      </div>
+
+      <div class="answer-question">{{ ans.question }}</div>
+
+      <div class="answer-body">
+        {% if ans.answer %}
+          {{ ans.answer }}
+        {% else %}
+          <em style="color:#64748b">No answer recorded.</em>
+        {% endif %}
+      </div>
+
+      <div class="score-bar-row">
+        <div class="score-bar-track">
+          <div class="score-bar-fill {% if ans.score >= 75 %}good{% elif ans.score >= 50 %}avg{% else %}low{% endif %}"
+               style="width: {{ ans.score }}%"></div>
+        </div>
+        <span class="kw-hit">{{ ans.keywords_hit }} keywords matched</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Performance Chart -->
+  <div class="card chart-big">
+    <div class="card-header">
+      <h3>Score Per Question</h3>
+    </div>
+    <canvas id="breakdownChart" height="100"></canvas>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const qLabels = [{% for ans in answers %}"Q{{ loop.index }}"{% if not loop.last %},{% endif %}{% endfor %}];
+const qScores = [{% for ans in answers %}{{ ans.score }}{% if not loop.last %},{% endif %}{% endfor %}];
+const qConfs  = [{% for ans in answers %}{{ ans.confidence }}{% if not loop.last %},{% endif %}{% endfor %}];
+
+const ctx = document.getElementById("breakdownChart").getContext("2d");
+new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: qLabels,
+    datasets: [
+      {
+        label: "Score %",
+        data: qScores,
+        backgroundColor: "rgba(124,58,237,0.7)",
+        borderRadius: 6,
+      },
+      {
+        label: "Confidence %",
+        data: qConfs,
+        backgroundColor: "rgba(6,182,212,0.5)",
+        borderRadius: 6,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color:"#94a3b8", font:{ family:"DM Sans" } } }
+    },
+    scales: {
+      x: { grid:{color:"rgba(255,255,255,0.05)"}, ticks:{color:"#94a3b8"} },
+      y: { min:0, max:100, grid:{color:"rgba(255,255,255,0.05)"}, ticks:{color:"#94a3b8"} }
+    }
+  }
+});
+</script>
+{% endblock %}

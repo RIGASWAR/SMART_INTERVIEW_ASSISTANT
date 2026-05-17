@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Sign Up — InterviewAI{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="19" stroke="url(#g2)" stroke-width="2"/>
+          <path d="M13 20l5 5 9-10" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="g2" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#7c3aed"/>
+              <stop offset="1" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">InterviewAI</span>
+    </div>
+
+    <h1 class="auth-title">Create account</h1>
+    <p class="auth-subtitle">Your AI-powered interview coach awaits</p>
+
+    <form method="POST" action="{{ url_for('signup') }}" class="auth-form">
+      <div class="form-group">
+        <label for="username">Full name</label>
+        <input type="text" id="username" name="username" placeholder="Jane Doe" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password <small>(min 6 characters)</small></label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required minlength="6" />
+      </div>
+
+      <button type="submit" class="btn-primary btn-full">Create account</button>
+    </form>
+
+    <p class="auth-switch">
+      Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+    </p>
+
+    <div class="feature-pills">
+      <span class="pill">🎤 Speech-to-text</span>
+      <span class="pill">📊 AI Scoring</span>
+      <span class="pill">📷 Emotion Detection</span>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
