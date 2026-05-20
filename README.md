@@ -89,22 +89,22 @@ The system integrates:
 
 ---
 
-## Analytics Dashboard
+## Interview Analytics Dashboard
 ![Analytics](assets/analytics.png)
 
 ---
 
-## Advanced Analytics View
+## Score Per Question Analysi
 ![Analytics 2](assets/analytics2.png)
 
 ---
 
-## Invoice Generation
+## Interview Result & Performance Report
 ![Invoice](assets/invoice.png)
 
 ---
 
-## Webcam Monitoring
+## Real-Time Webcam Emotion Monitoring
 ![Webcam](assets/webcam.png)
 
 ---
