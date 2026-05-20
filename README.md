@@ -1,150 +1,143 @@
-# 🤖 AI-Powered Smart Interview Assistant
+# AI-Smart-Interview-Assistant
 
-A production-ready, full-stack web application for AI-driven mock interview preparation.
-Built with Python Flask, SQLite, and a sleek dark UI.
-
----
-
-## ✨ Features
-
-| Feature | Description |
-|---|---|
-| 🔐 Auth | Secure signup / login with hashed passwords |
-| 🎤 Speech-to-Text | Browser-native speech recognition — no API key needed |
-| 🤖 AI Questions | Role-based, difficulty-adjusted question bank |
-| 📷 Emotion Detection | Webcam-based live emotion & confidence feedback |
-| 📄 Resume Upload | Upload PDF/TXT résumé; skills auto-detected |
-| 📊 AI Scoring | Multi-factor answer scoring (keywords, structure, length) |
-| 📈 Dashboard | Score trends, history table, analytics charts |
-| 🌙 Dark UI | Premium dark theme with gradient accents |
-| 🗄️ SQLite | Zero-config local database — no server needed |
+AI-powered mock interview platform with speech analysis, webcam monitoring, real-time interview analytics, and automated candidate performance evaluation.
 
 ---
 
-## 📁 Folder Structure
+# Overview
 
-```
-smart_interview_assistant/
-├── app.py                  ← Flask backend (all routes + logic)
-├── requirements.txt
-├── README.md
-├── instance/
-│   └── interview.db        ← SQLite DB (auto-created on first run)
-├── static/
-│   ├── css/
-│   │   └── style.css
-│   ├── js/
-│   │   ├── main.js         ← Webcam, emotion polling, shared utils
-│   │   └── interview.js    ← Interview session state machine
-│   └── uploads/            ← Uploaded résumés (auto-created)
-└── templates/
-    ├── base.html
-    ├── login.html
-    ├── signup.html
-    ├── dashboard.html
-    ├── interview.html
-    └── results.html
-```
+AI-Smart-Interview-Assistant is an intelligent interview simulation platform designed to help users practice technical and HR interviews in a real-time environment. The system integrates speech processing, computer vision, and analytics to evaluate candidate performance and provide automated feedback.
+
+The platform monitors user interaction through webcam analysis, speech-to-text processing, and real-time behavioral tracking to improve interview preparation and communication skills.
 
 ---
 
-## 🚀 Quick Start (3 steps)
+# Features
 
-### 1. Install Python 3.9+
-Make sure Python 3.9 or newer is installed:
+- AI-powered mock interview simulation
+- Real-time webcam monitoring
+- Speech-to-text processing
+- Interview performance analytics
+- Candidate behavior analysis
+- Automated feedback generation
+- Real-time dashboard
+- Facial activity monitoring
+- Interactive question-answer workflow
+- User-friendly interface
+
+---
+
+# Tech Stack
+
+## Frontend
+- HTML
+- CSS
+- JavaScript
+
+## Backend
+- Python
+- Flask
+
+## AI & Computer Vision
+- OpenCV
+- SpeechRecognition
+- NLP Processing
+
+---
+
+# System Workflow
+
+1. User starts mock interview
+2. Webcam captures facial activity
+3. Speech-to-text converts responses
+4. System analyzes candidate interaction
+5. Analytics dashboard displays performance
+6. Automated feedback generated
+
+---
+
+# AI Integration
+
+The system integrates:
+- Computer Vision for facial activity analysis
+- Speech Recognition for response processing
+- NLP techniques for interaction analysis
+- Real-time analytics for performance tracking
+
+---
+
+# Key Functionalities
+
+- Live interview monitoring
+- Automated response tracking
+- Behavioral analytics
+- Communication assessment
+- Real-time feedback generation
+- Performance visualization dashboard
+
+---
+
+# Screenshots
+
+## Dashboard
+(Add screenshot here)
+
+## Mock Interview Interface
+(Add screenshot here)
+
+## Analytics Dashboard
+(Add screenshot here)
+
+## Webcam Monitoring
+(Add screenshot here)
+
+---
+
+# Installation
+
+## Clone Repository
+
 ```bash
-python --version
+git clone https://github.com/RIGASWAR/AI-Smart-Interview-Assistant.git
 ```
 
-### 2. Install dependencies
+## Navigate to Project Folder
+
+```bash
+cd AI-Smart-Interview-Assistant
+```
+
+## Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Run the app
+## Run Application
+
 ```bash
 python app.py
 ```
 
-Open your browser at **http://127.0.0.1:5000**
+---
+
+# Future Enhancements
+
+- AI-generated interview questions
+- Emotion recognition integration
+- Resume-based question generation
+- Voice confidence analysis
+- Online interview rooms
+- Multi-language support
 
 ---
 
-## 🎯 Usage Guide
+# Contributors
 
-1. **Sign up** — create a free account (no email verification needed)
-2. **Upload résumé** (optional) — drag & drop a PDF or TXT file on the Dashboard
-3. **New Interview** — choose your role, difficulty, and number of questions
-4. **Allow camera** — for live emotion & confidence tracking
-5. **Answer questions** — type your answers or click **Start Speaking** to use voice
-6. **See results** — get a detailed breakdown with scores per question
-7. **Track progress** — revisit the Dashboard to see your score trend
+- Rigaswar S
 
 ---
 
-## 🛠️ Troubleshooting
+# License
 
-### `ModuleNotFoundError: No module named 'flask'`
-```bash
-pip install -r requirements.txt
-# or, if using pip3:
-pip3 install -r requirements.txt
-```
-
-### Port 5000 already in use
-```bash
-# macOS: disable AirPlay Receiver in System Settings → General → AirDrop & Handoff
-# or run on a different port:
-python app.py --port 5001
-# (edit the port in app.py line at the bottom)
-```
-
-### Camera not working
-- Make sure you are on **http://localhost:5000** (not a remote URL) — browsers only grant camera access on localhost or HTTPS
-- Click **Allow** when the browser asks for camera permission
-- Use **Chrome** or **Edge** for best speech-to-text support
-
-### Speech-to-text not working
-- Speech recognition requires **Chrome** or **Edge**
-- Make sure your microphone is connected and allowed in browser settings
-- The text area is always editable — you can type your answer directly
-
-### Database errors
-Delete `instance/interview.db` and restart the app — the DB will be recreated automatically.
-
----
-
-## 🔧 Configuration
-
-Edit the top of `app.py` to customise:
-
-| Setting | Default | Description |
-|---|---|---|
-| `SECRET_KEY` | `"interview-assistant-secret-2024"` | Session secret (change in production) |
-| `UPLOAD_FOLDER` | `static/uploads` | Résumé storage path |
-| `MAX_CONTENT_LENGTH` | 5 MB | Max upload size |
-| Port | 5000 | Change in `app.run(port=5000)` |
-
----
-
-## 🏗️ Architecture
-
-```
-Browser
-  ├── HTML/CSS/JS (templates/ + static/)
-  │     ├── Webcam API  → captures frames for emotion
-  │     └── Web Speech API → speech-to-text transcription
-  │
-  └── HTTP ↔ Flask (app.py)
-              ├── /api/start_interview  → generates questions
-              ├── /api/submit_answer   → scores + stores answer
-              ├── /api/finish_interview→ computes final metrics
-              ├── /api/emotion_update  → returns simulated emotion
-              └── SQLite (instance/interview.db)
-```
-
----
-
-## 📜 License
-
-MIT — free for personal and commercial use.
+This project is developed for educational and research purposes.
