@@ -79,17 +79,33 @@ The system integrates:
 
 # Screenshots
 
-## Dashboard
-(Add screenshot here)
+## Login Interface
+![Login](assets/login.png)
 
-## Mock Interview Interface
-(Add screenshot here)
+---
+
+## Main Dashboard
+![Dashboard](assets/dashboard.png)
+
+---
 
 ## Analytics Dashboard
-(Add screenshot here)
+![Analytics](assets/analytics.png)
+
+---
+
+## Advanced Analytics View
+![Analytics 2](assets/analytics2.png)
+
+---
+
+## Invoice Generation
+![Invoice](assets/invoice.png)
+
+---
 
 ## Webcam Monitoring
-(Add screenshot here)
+![Webcam](assets/webcam.png)
 
 ---
 
