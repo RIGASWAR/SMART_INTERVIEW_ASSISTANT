@@ -1,3 +1,9 @@
+![Python](https://img.shields.io/badge/Python-Backend-blue)
+![Flask](https://img.shields.io/badge/Flask-WebFramework-black)
+![OpenCV](https://img.shields.io/badge/OpenCV-ComputerVision-green)
+![AI](https://img.shields.io/badge/AI-InterviewAnalytics-red)
+
+
 # AI-Smart-Interview-Assistant
 
 AI-powered mock interview platform with speech analysis, webcam monitoring, real-time interview analytics, and automated candidate performance evaluation.
