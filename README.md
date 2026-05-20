@@ -89,8 +89,8 @@ The system integrates:
 
 ---
 
-## Interview Analytics Dashboard
-![Analytics](assets/analytics.png)
+## Real-Time Webcam Emotion Monitoring
+![Webcam](assets/webcam.png)
 
 ---
 
@@ -99,13 +99,13 @@ The system integrates:
 
 ---
 
-## Interview Result & Performance Report
-![Invoice](assets/invoice.png)
+## Interview Analytics Dashboard
+![Analytics](assets/analytics.png)
 
 ---
 
-## Real-Time Webcam Emotion Monitoring
-![Webcam](assets/webcam.png)
+## Interview Result & Performance Report
+![Invoice](assets/invoice.png)
 
 ---
 
